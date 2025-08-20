@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 type CounterContextType = {
   counter: number;
@@ -20,6 +20,7 @@ export function CounterProvider({ children }: CounterProviderProps) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCounter() {
   const context = useContext(CounterContext);
   if (!context) {

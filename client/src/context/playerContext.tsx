@@ -2,7 +2,7 @@ import { createContext, useState, type ReactNode, useContext } from "react";
 
 type Player = {
   name: string;
-  score: number;
+  score: string;
 };
 
 type PlayerContextType = {
@@ -17,7 +17,7 @@ type PlayerProviderProps = {
 };
 
 export function PlayerProvider({ children }: PlayerProviderProps) {
-  const [player, setPlayer] = useState<Player>({ name: "", score: 0 });
+  const [player, setPlayer] = useState<Player>({ name: "", score: "0" });
   const value = { player, setPlayer };
 
   return (
