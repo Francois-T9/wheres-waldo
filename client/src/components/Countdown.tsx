@@ -1,7 +1,7 @@
 import { useCounter } from "../context/counterContext";
-import React from "react";
 import { useEffect } from "react";
-import convertTime from "../utils/TimeFormat";
+import convertTime from "../utils/timeFormat";
+import Clock from "./ui/Clock";
 function Countdown({ isOver }: { isOver: boolean }) {
   const { counter, setCounter } = useCounter();
   useEffect(() => {
@@ -20,29 +20,7 @@ function Countdown({ isOver }: { isOver: boolean }) {
 
   return (
     <div>
-      {/* For TSX uncomment the commented types below */}
-      <span className="countdown font-mono text-2xl">
-        <span
-          style={{ "--value": hours } as React.CSSProperties}
-          aria-live="polite"
-        >
-          {hours}
-        </span>
-        :
-        <span
-          style={{ "--value": minutes } as React.CSSProperties}
-          aria-live="polite"
-        >
-          {minutes}
-        </span>
-        :
-        <span
-          style={{ "--value": secs } as React.CSSProperties}
-          aria-live="polite"
-        >
-          {secs}
-        </span>
-      </span>
+      <Clock hours={hours} minutes={minutes} secs={secs} />
     </div>
   );
 }

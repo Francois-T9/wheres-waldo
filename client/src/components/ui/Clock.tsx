@@ -1,34 +1,35 @@
 import React from "react";
 
-function Clock() {
+interface ClockProps {
+  hours: number;
+  minutes: number;
+  secs: number;
+}
+function Clock({ hours, minutes, secs }: ClockProps) {
   return (
     <div>
       {/* For TSX uncomment the commented types below */}
       <span className="countdown font-mono text-2xl">
         <span
-          style={{ "--value": 10 } /* as React.CSSProperties */}
+          style={{ "--value": hours } as React.CSSProperties}
           aria-live="polite"
-          aria-label={counter}
         >
-          10
+          {hours}
         </span>
-        h
+        :
         <span
-          style={{ "--value": 24 } /* as React.CSSProperties */}
+          style={{ "--value": minutes } as React.CSSProperties}
           aria-live="polite"
-          aria-label={counter}
         >
-          24
+          {minutes}
         </span>
-        m
+        :
         <span
-          style={{ "--value": 59 } /* as React.CSSProperties */}
+          style={{ "--value": secs } as React.CSSProperties}
           aria-live="polite"
-          aria-label={counter}
         >
-          59
+          {secs}
         </span>
-        s
       </span>
     </div>
   );
