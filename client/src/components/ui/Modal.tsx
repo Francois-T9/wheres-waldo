@@ -1,16 +1,42 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { usePlayer } from "../../context/playerContext";
+import { useState, type ChangeEvent } from "react";
 function Modal() {
+  const navigate = useNavigate();
   const { setPlayer } = usePlayer();
+
+  const [error, setError] = useState<string>("Player name cannot be empty");
+  const validateInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    if (name.length == 0) {
+      setError("Player name cannot be empty");
+    } else {
+      setError("");
+      setPlayer({ name: name, score: "0" });
+    }
+  };
+
+  const handleRedirect = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (!error) {
+      navigate("/game");
+    }
+  };
+
   return (
     <div>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
       <button
         className="btn btn-accent"
-        onClick={() => document.getElementById("my_modal_1").showModal()}
+        onClick={() =>
+          (
+            document.getElementById("my_modal_1") as HTMLDialogElement
+          ).showModal()
+        }
       >
         Play now!
       </button>
+
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box flex flex-col items-center">
           <h3 className="font-bold text-lg">Enter player name</h3>
@@ -21,12 +47,15 @@ function Modal() {
                 type="text"
                 className="input join-item"
                 placeholder="John Doe"
-                onChange={(e) => setPlayer({ name: e.target.value })}
+                onChange={(e) => validateInput(e)}
               />
               <button className="btn join-item">
                 {" "}
-                <Link to="/game">Play now!</Link>
+                <Link to="#" onClick={handleRedirect}>
+                  Play now!
+                </Link>
               </button>
+              {error ? <p className="text-red-500">{error}</p> : null}
             </div>
           </fieldset>
           <div className="modal-action">
