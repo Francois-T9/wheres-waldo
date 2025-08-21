@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model Character {
+    id  Int @id @default(autoincrement())
+    name String @unique
+    xMin Int
+    xMax Int
+    yMin Int
+    yMax Int
+}
+
+
+model Player {
+    id  Int @id @default(autoincrement())
+    name String
+    score Int
+}
