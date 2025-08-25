@@ -1,4 +1,3 @@
-import Select from "./Select";
 type Props = {
   boxWidth: number;
   boxHeight: number;
@@ -16,8 +15,6 @@ export default function Box({ boxWidth, boxHeight, boxXPos, boxYPos }: Props) {
         left: `${boxXPos - boxWidth / 2}px`,
       }}
       className="relative border-black border-4 -z-0"
-    >
-      <Select />
-    </div>
+    ></div>
   );
 }

@@ -16,11 +16,11 @@ function Countdown({ isOver }: { isOver: boolean }) {
     return () => clearInterval(interval);
   }, [isOver]);
 
-  const { hours, minutes, secs } = convertTime(counter);
+  const { minutes, secs } = convertTime(counter);
 
   return (
     <div>
-      <Clock hours={hours} minutes={minutes} secs={secs} />
+      <Clock minutes={minutes} secs={secs} />
     </div>
   );
 }
