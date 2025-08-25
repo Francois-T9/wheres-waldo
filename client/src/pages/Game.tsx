@@ -1,44 +1,45 @@
 import { useEffect, useState } from "react";
 import Modal from "../components/ui/Modal";
+import List from "../components/ui/List";
 import waldoEasy from "../assets/waldo_beach_large.jpg";
 import Countdown from "../components/Countdown";
 import { usePlayer } from "../context/playerContext";
 import { useCounter } from "../context/counterContext";
-import { useAllPlayers } from "../context/allPlayersContext";
-import convertTime from "../utils/timeFormat";
+import type { MousePos, ImageProperties, Character } from "../types/types";
 import getMouseClickPosition from "../utils/getMouseCoordinates";
 import Select from "../components/ui/Select";
 function Game() {
-  type MousePos = {
-    xScreen: number;
-    yScreen: number;
-    xImage: number;
-    yImage: number;
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const fetchCharacters = async () => {
+    const res = await fetch("http://localhost:3000/api/characters", {
+      method: "GET",
+    });
+    const data = await res.json();
+    setCharacters(data);
   };
 
-  type ImageProperties = {
-    top: number;
-    left: number;
-    naturalWidth: number;
-    naturalHeight: number;
-    onScreenWidth: number;
-    onScreenHeight: number;
-  };
+  useEffect(() => {
+    async function fetchData() {
+      await fetchCharacters();
+    }
+    fetchData();
+  }, []);
   const [mousePos, setMousePos] = useState<MousePos>({
     xScreen: 0,
     yScreen: 0,
     xImage: 0,
     yImage: 0,
   });
-
   const [message, setMessage] = useState<string>(
     "Click on the image and find Waldo and his friends!"
   );
+  const { updatePlayer } = usePlayer();
   const [isOver, setIsOver] = useState<boolean>(false);
-  const { player, setPlayer } = usePlayer();
+  const { player } = usePlayer();
   const { counter, setCounter } = useCounter();
-  const { setAllPlayers } = useAllPlayers();
-  const { minutes, secs } = convertTime(counter); // get original
+  const [foundCharacters, setFoundCharacters] = useState<string[]>([]);
+
+  // const { minutes, secs } = convertTime(counter); // get original
   const [onScreenImageSize, setOnScreenImageSize] = useState<ImageProperties>({
     top: 0,
     left: 0,
@@ -101,15 +102,13 @@ function Game() {
   };
 
   useEffect(() => {
-    setCounter(0);
-    if (isOver) {
-      setPlayer({ name: player.name, score: `${minutes}:${secs}` });
-      setAllPlayers((prevArray) => {
-        return [...prevArray, { name: player.name, score: counter }];
-      });
-      // setMessage(`You found Waldo in ${minutes}min${secs}sec !!`);
+    if (foundCharacters.length == 4) {
+      updatePlayer(player.name, counter);
+      setIsOver(true);
+      // setCounter(0);
+      setMessage("You found all the characters");
     }
-  }, [isOver]);
+  }, [isOver, foundCharacters]);
 
   return (
     <div
@@ -119,7 +118,12 @@ function Game() {
       <Modal />
       <div className="hero-content text-center flex-col">
         <div className="max-w-md">
-          <h1 className="text-4xl font-bold">Good luck {player.name}!</h1>
+          {isOver ? (
+            <h1 className="text-4xl font-bold">Congratulations!</h1>
+          ) : (
+            <h1 className="text-4xl font-bold">Good luck {player.name}!</h1>
+          )}
+
           <Countdown isOver={isOver} />
           <p>{message}</p>
         </div>
@@ -133,16 +137,21 @@ function Game() {
                 imageY={mousePos.yImage}
                 setIsOver={setIsOver}
                 setMessage={setMessage}
+                characters={characters}
+                setFoundCharacters={setFoundCharacters}
               />
             </>
           )}
 
-          <img
-            // onClick={(e) => handleImageClicks(e)}
-            src={waldoEasy}
-            className=" cursor-pointer max-w-6xl rounded-lg shadow-2xl"
-            onLoad={(e) => handleImageLoad(e)}
-          />
+          <div className="flex flex-col gap-2">
+            <img
+              // onClick={(e) => handleImageClicks(e)}
+              src={waldoEasy}
+              className=" cursor-pointer max-w-6xl rounded-lg shadow-2xl"
+              onLoad={(e) => handleImageLoad(e)}
+            />
+            <List foundCharacters={foundCharacters} />
+          </div>
         </div>
       </div>
     </div>

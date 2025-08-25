@@ -1,25 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { usePlayer } from "../../context/playerContext";
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 function Modal() {
   const navigate = useNavigate();
-  const { setPlayer } = usePlayer();
+  const { createPlayer, error } = usePlayer();
 
-  const [error, setError] = useState<string>("Player name cannot be empty");
-  const validateInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
-    if (name.length == 0) {
-      setError("Player name cannot be empty");
-    } else {
-      setError("");
-      setPlayer({ name: name, score: "0" });
-    }
-  };
+  const [playerName, setPlayerName] = useState<string>("");
 
-  const handleRedirect = (e: { preventDefault: () => void }) => {
+  const handleRedirect = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (!error) {
+    const res = await createPlayer(playerName);
+    if (res.success) {
+      // ✅ only navigate if no errors
       navigate("/game");
+    } else {
+      // errors are already set in state, just don’t navigate
     }
   };
 
@@ -42,21 +37,19 @@ function Modal() {
           <h3 className="font-bold text-lg">Enter player name</h3>
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
             <legend className="fieldset-legend">Player name</legend>
-            <div className="join">
+            <form className="join" onSubmit={handleRedirect} method="post">
               <input
                 type="text"
+                name="player"
                 className="input join-item"
                 placeholder="John Doe"
-                onChange={(e) => validateInput(e)}
+                onChange={(e) => setPlayerName(e.target.value)}
               />
-              <button className="btn join-item">
-                {" "}
-                <Link to="#" onClick={handleRedirect}>
-                  Play now!
-                </Link>
+              <button type="submit" className="btn join-item">
+                Play now!
               </button>
               {error ? <p className="text-red-500">{error}</p> : null}
-            </div>
+            </form>
           </fieldset>
           <div className="modal-action">
             <form method="dialog">
