@@ -2165,7 +2165,7 @@ export namespace Prisma {
   export type PlayerGroupByOutputType = {
     id: number
     name: string
-    score: number
+    score: number | null
     _count: PlayerCountAggregateOutputType | null
     _avg: PlayerAvgAggregateOutputType | null
     _sum: PlayerSumAggregateOutputType | null
@@ -2219,7 +2219,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
-      score: number
+      score: number | null
     }, ExtArgs["result"]["player"]>
     composites: {}
   }
@@ -3063,6 +3063,14 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   /**
    * Field references
    */
@@ -3178,28 +3186,28 @@ export namespace Prisma {
     NOT?: PlayerWhereInput | PlayerWhereInput[]
     id?: IntFilter<"Player"> | number
     name?: StringFilter<"Player"> | string
-    score?: IntFilter<"Player"> | number
+    score?: IntNullableFilter<"Player"> | number | null
   }
 
   export type PlayerOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    score?: SortOrder
+    score?: SortOrderInput | SortOrder
   }
 
   export type PlayerWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    name?: string
     AND?: PlayerWhereInput | PlayerWhereInput[]
     OR?: PlayerWhereInput[]
     NOT?: PlayerWhereInput | PlayerWhereInput[]
-    name?: StringFilter<"Player"> | string
-    score?: IntFilter<"Player"> | number
-  }, "id">
+    score?: IntNullableFilter<"Player"> | number | null
+  }, "id" | "name">
 
   export type PlayerOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    score?: SortOrder
+    score?: SortOrderInput | SortOrder
     _count?: PlayerCountOrderByAggregateInput
     _avg?: PlayerAvgOrderByAggregateInput
     _max?: PlayerMaxOrderByAggregateInput
@@ -3213,7 +3221,7 @@ export namespace Prisma {
     NOT?: PlayerScalarWhereWithAggregatesInput | PlayerScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Player"> | number
     name?: StringWithAggregatesFilter<"Player"> | string
-    score?: IntWithAggregatesFilter<"Player"> | number
+    score?: IntNullableWithAggregatesFilter<"Player"> | number | null
   }
 
   export type CharacterCreateInput = {
@@ -3278,41 +3286,41 @@ export namespace Prisma {
 
   export type PlayerCreateInput = {
     name: string
-    score: number
+    score?: number | null
   }
 
   export type PlayerUncheckedCreateInput = {
     id?: number
     name: string
-    score: number
+    score?: number | null
   }
 
   export type PlayerUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    score?: IntFieldUpdateOperationsInput | number
+    score?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayerUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    score?: IntFieldUpdateOperationsInput | number
+    score?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayerCreateManyInput = {
     id?: number
     name: string
-    score: number
+    score?: number | null
   }
 
   export type PlayerUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    score?: IntFieldUpdateOperationsInput | number
+    score?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PlayerUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    score?: IntFieldUpdateOperationsInput | number
+    score?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -3418,6 +3426,22 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type PlayerCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -3446,12 +3470,36 @@ export namespace Prisma {
     score?: SortOrder
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type IntFieldUpdateOperationsInput = {
     set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
     increment?: number
     decrement?: number
     multiply?: number
@@ -3525,6 +3573,44 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
 

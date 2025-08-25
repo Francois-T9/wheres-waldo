@@ -19,6 +19,6 @@ model Character {
 
 model Player {
   id    Int    @id @default(autoincrement())
-  name  String
-  score Int
+  name  String @unique
+  score Int?
 }
