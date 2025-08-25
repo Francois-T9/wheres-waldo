@@ -6,8 +6,8 @@ interface Player {
 }
 
 type AllPlayersContextType = {
+  getAllPlayers: () => void;
   allPlayers: Array<Player>;
-  setAllPlayers: React.Dispatch<React.SetStateAction<Array<Player>>>;
 };
 
 const AllPlayersContext = createContext<AllPlayersContextType | undefined>(
@@ -20,8 +20,15 @@ type AllPlayersProviderProps = {
 
 export function AllPlayersProvider({ children }: AllPlayersProviderProps) {
   const [allPlayers, setAllPlayers] = useState<Array<Player>>([]);
-  const value: AllPlayersContextType = { allPlayers, setAllPlayers };
 
+  const getAllPlayers = async () => {
+    const response = await fetch("http://localhost:3000/api/players", {
+      method: "GET",
+    });
+    const data = await response.json();
+    setAllPlayers(data);
+  };
+  const value = { getAllPlayers, allPlayers };
   return (
     <AllPlayersContext.Provider value={value}>
       {children}
