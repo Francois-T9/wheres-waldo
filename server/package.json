@@ -10,7 +10,8 @@
     "dev": "tsx watch src/app.ts",
     "start": "tsx src/app.ts",
     "generate": "prisma generate",
-    "migrate:deploy": "prisma migrate deploy"
+    "migrate:deploy": "prisma migrate deploy",
+    "seed": "tsx prisma/seed.ts"
   },
   "author": "",
   "license": "ISC",
