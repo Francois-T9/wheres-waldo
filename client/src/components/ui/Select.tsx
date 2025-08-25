@@ -1,41 +1,35 @@
-import { useEffect, useState, type Dispatch } from "react";
+import { useEffect, useState } from "react";
 import whoWasFound from "../../utils/whoWasFound";
-import { usePlayer } from "../../context/playerContext";
-type Props = {
-  dropdownXPos: number;
-  dropdownYPos: number;
-  imageX: number;
-  imageY: number;
-  setIsOver: Dispatch<React.SetStateAction<boolean>>;
-  setMessage: Dispatch<React.SetStateAction<string>>;
-};
+import type { SelectProps } from "../../types/types";
 
 function Select({
   dropdownXPos,
   dropdownYPos,
   imageX,
   imageY,
-  setIsOver,
+
   setMessage,
-}: Props) {
-  const [character, setCharacter] = useState("");
-  const { player, setPlayer } = usePlayer();
+  characters,
+  setFoundCharacters,
+}: SelectProps) {
+  const [selectedCharacter, setSelectedCharacter] = useState("");
 
   useEffect(() => {
-    if (!character) return;
+    if (!selectedCharacter) return;
 
-    const isFound = whoWasFound(imageX, imageY, character);
+    const isFound = whoWasFound(imageX, imageY, selectedCharacter, characters);
+
     if (isFound) {
-      setIsOver(true);
-      setPlayer({ name: player.name, score: player.score });
-      setMessage(`You found ${character}!`);
+      // setIsOver(true);
+      setFoundCharacters((prevArray) => [...prevArray, isFound]);
+      setMessage(`You found ${selectedCharacter}!`);
     } else {
       setMessage("Try again");
     }
 
     // reset so the same option can be picked again
-    setCharacter("");
-  }, [character]);
+    setSelectedCharacter("");
+  }, [selectedCharacter]);
 
   return (
     <div
@@ -46,14 +40,14 @@ function Select({
       className="absolute -z-0 bg-base-100 w-50"
     >
       <select
-        value={character}
-        onChange={(e) => setCharacter(e.target.value)}
+        value={selectedCharacter}
+        onChange={(e) => setSelectedCharacter(e.target.value)}
         className="select select-ghost -z-0 border-black"
       >
         <option disabled={false}>Pick a character</option>
-        <option>Waldo</option>
-        <option>Wizard</option>
-        <option>Wilma</option>
+        {characters.map((charac) => (
+          <option>{charac.name}</option>
+        ))}
       </select>
     </div>
   );

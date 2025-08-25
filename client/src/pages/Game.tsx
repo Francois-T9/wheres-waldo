@@ -36,7 +36,7 @@ function Game() {
   const { updatePlayer } = usePlayer();
   const [isOver, setIsOver] = useState<boolean>(false);
   const { player } = usePlayer();
-  const { counter, setCounter } = useCounter();
+  const { counter } = useCounter();
   const [foundCharacters, setFoundCharacters] = useState<string[]>([]);
 
   // const { minutes, secs } = convertTime(counter); // get original

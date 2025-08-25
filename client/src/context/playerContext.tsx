@@ -14,7 +14,7 @@ type CreatePlayerResult = {
 type PlayerContextType = {
   player: Player;
   createPlayer: (name: string, score?: string) => Promise<CreatePlayerResult>;
-  updatePlayer: (name: string, newScore?: string) => Promise<void>;
+  updatePlayer: (name: string, newScore?: number) => Promise<void>;
   error: string;
 };
 
@@ -52,7 +52,7 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
 
   const updatePlayer = async (
     name: string,
-    newScore?: string
+    newScore?: number
   ): Promise<void> => {
     const response = await fetch("http://localhost:3000/api/players", {
       method: "PUT",
